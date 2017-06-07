@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FILE>urls_index.ejs<FILE</title>
+  </head>
+  <body>
+  <% include partials/_header.ejs %>
+    <ul>
+      <% Object.keys(urls).forEach((item)=> { %>
+        <li><%= item %> - <%= urls[item] %></li>
+      <% }) %>
+    </ul>
+    <p><a href="/urls/new">Create new tiny URL</a></p>
+  </body>
+</html>
