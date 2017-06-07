@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FILE>urls_index.ejs<FILE</title>
+
   </head>
+  <style type="text/css">
+    .styleOne{
+      font-style: Verdana;
+      color: red;
+      margin: auto;
+    }
+    .padd{
+      padding: 50px;
+    }
+  </style>
   <body>
   <% include partials/_header.ejs %>
-    <ul>
-      <% Object.keys(urls).forEach((item)=> { %>
-        <li><%= item %> - <%= urls[item] %></li>
-      <% }) %>
-    </ul>
+
+      <ul class='padd'>
+        <% Object.keys(urls).forEach((item)=> { %>
+          <form method="Post" action= "/urls/<%= item %>/delete" >
+          <li class="styleOne"><h3><%= item %> - <%= urls[item] %></h3>
+          <input type="submit" value="DELETE"></li>
+          </form>
+          <form method="Get" action="/urls/<%= item %>" style="margin:auto; padding: 10px;">
+          <input type="submit" value="Edit">
+          </form>
+        <% }) %>
+      </ul>
     <p><a href="/urls/new">Create new tiny URL</a></p>
   </body>
 </html>

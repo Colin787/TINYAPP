@@ -3,10 +3,26 @@
   <head>
     <title></title>
   </head>
+  <style type="text/css">
+    .myStyle{
+      .myStyle{
+        font-style: Verdana;
+      }
+      .padd{
+        padding: 100px;
+      }
+    }
+  </style>
   <body>
     <% include partials/_header.ejs %>
-    <ul>
-       <li><%= shortURL %> --- <%= longURL %> </li>
+    <ul class='padd'>
+       <li class="myStyle"><h2><%= shortURL %> --- <%= longURL %></h2>
+       </li>
     </ul>
+    <form action="/urls/<%= shortURL %>" method="POST" style="margin:auto; padding: 100px;">
+      <label for="longURL">Update URL Here:</label>
+      <input type="text" id="longURL" name="longURL" style="width: 300px" value="https://">
+      <input type="submit" value="Submit">
+    </form>
   </body>
 </html>
