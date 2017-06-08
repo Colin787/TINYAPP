@@ -12,21 +12,24 @@
     .padd{
       padding: 50px;
     }
+    .marg{
+      margin-left: 100px;
+    }
   </style>
   <body>
   <% include partials/_header.ejs %>
 
       <ul class='padd'>
         <% Object.keys(urls).forEach((item)=> { %>
-          <form method="Post" action= "/urls/<%= item %>/delete" >
+          <form method="Post" action= "/urls/<%= item %>/delete" class="marg">
           <li class="styleOne"><h3><%= item %> - <%= urls[item] %></h3>
           <input type="submit" value="DELETE"></li>
           </form>
-          <form method="Get" action="/urls/<%= item %>" style="margin:auto; padding: 10px;">
+          <form method="Get" action="/urls/<%= item %>" style="margin-left:100px; padding: 10px;">
           <input type="submit" value="Edit">
           </form>
         <% }) %>
       </ul>
-    <p><a href="/urls/new">Create new tiny URL</a></p>
+    <p class="marg"><a href="/urls/new" style="font-size: 1.5em;">Create new tiny URL</a></p>
   </body>
 </html>
