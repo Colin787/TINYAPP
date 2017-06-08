@@ -9,18 +9,25 @@
       color: red;
       margin: auto;
     }
-    .padd{
+    /*.padd{
       padding: 50px;
-    }
-    .marg{
+    }*/
+    /*.marg{
       margin-left: 100px;
-    }
+    }*/
   </style>
   <body>
-  <% include partials/_header.ejs %>
-
-      <ul class='padd'>
+    <table style="margin-left: 200px;">
+    <tr>
+      <th>
+        <% include partials/_header.ejs %>
+      </th>
+    </tr>
+    <tr>
+      <td>
+       <ul class='padd'>
         <% Object.keys(urls).forEach((item)=> { %>
+
           <form method="Post" action= "/urls/<%= item %>/delete" class="marg">
           <li class="styleOne"><h3><%= item %> - <%= urls[item] %></h3>
           <input type="submit" value="DELETE"></li>
@@ -30,6 +37,14 @@
           </form>
         <% }) %>
       </ul>
-    <p class="marg"><a href="/urls/new" style="font-size: 1.5em;">Create new tiny URL</a></p>
+      </td>
+    </tr>
+    <tr>
+      <th>
+      <p class="marg"><a href="/urls/new" style="font-size: 1.5em;">Create new tiny URL</a></p>
+      </th>
+    </tr>
+
+  </table>
   </body>
 </html>
