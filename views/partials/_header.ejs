@@ -7,7 +7,7 @@
     .headingOne{
       font-style: Verdana;
       color: red;
-      text-align: center;
+      margin-left: 60px;
 
     }
   </style>
@@ -15,17 +15,21 @@
     <header>
       <p><a href='/'>Go Home</a></p>
       <h1 class="headingOne"><a href="/urls">SMALLEST APP AROUND</a></h1>
-      <% if (username) { %>
-        <%= username %>
-        <form method="POST" action="/logout" style="margin:auto; padding: 20px;">
+      <% if (user) { %>
+
+        <h4> Welcome to tinyAPP <%= user.email %></h4>
+        <form method="POST" action="/logout" style="margin:auto;">
         <label for="logout">Logout:</label>
         <input type="submit" value="Logout">
         </form>
       <% } else { %>
-        <form action="/login" method="POST" style="margin:auto; padding: 20px;">
-        <label for="username">Enter a Username:</label>
-        <input id="username" type="text" name="username" placeholder="Username Here" style="width: 300px">
-        <input type="submit" value="Submit">
+        <form method="GET" action="/register" style="margin:auto; padding: 20px;">
+        <label for="logout">SIGNUP:</label>
+        <input type="submit" value="SignUp">
+        </form>
+        <form method="GET" action="/login" style="margin:auto; padding: 20px;">
+        <label for="login">LOGIN:</label>
+        <input  id="login"type="submit" value="Login">
         </form>
       <% }  %>
     </header>
