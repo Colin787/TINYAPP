@@ -7,12 +7,27 @@
     .headingOne{
       font-style: Verdana;
       color: red;
-      margin: auto;
+      text-align: center;
+
     }
   </style>
   <body>
     <header>
+      <p><a href='/'>Go Home</a></p>
       <h1 class="headingOne"><a href="/urls">SMALLEST APP AROUND</a></h1>
+      <% if (username) { %>
+        <%= username %>
+        <form method="POST" action="/logout" style="margin:auto; padding: 20px;">
+        <label for="logout">Logout:</label>
+        <input type="submit" value="Logout">
+        </form>
+      <% } else { %>
+        <form action="/login" method="POST" style="margin:auto; padding: 20px;">
+        <label for="username">Enter a Username:</label>
+        <input id="username" type="text" name="username" placeholder="Username Here" style="width: 300px">
+        <input type="submit" value="Submit">
+        </form>
+      <% }  %>
     </header>
   </body>
 </html>
