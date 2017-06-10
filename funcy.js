@@ -1,3 +1,4 @@
+//functions for generating random number and error messages
 module.exports.randomNumber = function randomString() {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   var result = '';
