@@ -4,25 +4,33 @@
     <title></title>
   </head>
   <style type="text/css">
-    .myStyle{
+    /*.myStyle{
       .myStyle{
         font-style: Verdana;
       }
       .padd{
         padding: 100px;
-      }
+      }*/
     }
   </style>
-  <body>
-    <% include partials/_header.ejs %>
-    <ul class='padd'>
-       <li class="myStyle"><h2><%= shortURL %> --- <%= longURL %></h2>
-       </li>
-    </ul>
-    <form action="/urls/<%= shortURL %>" method="POST" style="margin:auto; padding: 100px;">
-      <label for="longURL">Update URL Here:</label>
-      <input type="text" id="longURL" name="longURL" style="width: 300px" value="https://">
-      <input type="submit" value="Submit">
-    </form>
+  <body style="padding:25px 40px 40px 50px;">
+    <header>
+      <% include ../views/partials/_header %>
+    </header>
+    <p>Original URL: <a href="<%= longURL %>"><%= longURL %></a></p>
+    <p>Shortened URL: <a href="<%= longURL %>">http://localhost:8080/<%= shortURL.toString() %></a></p>
+    <p></p>
+    <% if (userId) { %>
+      <form action="/urls/user" style="padding-top:25px;">
+        <label for="backToYour">
+          <input type="submit" id="backToYour" value="Back to your list" />
+        </label>
+      </form>
+    <% } %>
+      <form action="/" style="padding-top:14px;">
+        <label for="backToFull" >
+          <input type="submit" id="backToFull" value="Back to full list" />
+        </label>
+      </form>
   </body>
 </html>
