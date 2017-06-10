@@ -1,50 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
+  <body>
+  <header>
+      <% include ../views/partials/_header %>
+    </header>
+    <p>Here are all shortened URLS</p>
+    <ol>
+      <% for (var i in urls) { %>
+        <li>
+          <a href="<%= urls[i].link %>"><%=i %></a>
+          <div><%= `----------`%></div>
+          <a href="urls/<%= i %>"> View the url </a>
+        </li>
+      <% } %>
+    </ol>
+    <% if (userId) { %>
+      <form action="urls/user" style="padding-top: 14px;">
+        <label for="manage">
+          <input id="manage" type="submit" value="Click to manage your links" />
+        </label>
+      </form>
+    <% } %>
 
   </head>
-  <style type="text/css">
-    .styleOne{
-      font-style: Verdana;
-      color: red;
-      margin: auto;
-    }
-    /*.padd{
-      padding: 50px;
-    }*/
-    /*.marg{
-      margin-left: 100px;
-    }*/
-  </style>
-  <body>
-    <table style="margin-left: 200px;">
-    <tr>
-      <th>
-        <% include partials/_header.ejs %>
-      </th>
-    </tr>
-    <tr>
-      <td>
-       <ul class='padd'>
-        <% Object.keys(urls).forEach((item)=> { %>
-
-          <form method="Post" action= "/urls/<%= item %>/delete" class="marg">
-          <li class="styleOne"><h3><%= item %> - <%= urls[item] %></h3>
-          <input type="submit" value="DELETE"></li>
-          </form>
-          <form method="Get" action="/urls/<%= item %>" style="margin-left:100px; padding: 10px;">
-          <input type="submit" value="Edit">
-          </form>
-        <% }) %>
-      </ul>
-      </td>
-    </tr>
-    <tr>
-      <th>
-      <p class="marg"><a href="/urls/new" style="font-size: 1.5em;">Create new tiny URL</a></p>
-      </th>
-    </tr>
-
-  </table>
   </body>
 </html>
