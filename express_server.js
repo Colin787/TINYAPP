@@ -18,14 +18,11 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-
 //parses cookies
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }));
-
-
 var urlDatabase = {
   "b2xVn2": {longurl: "http://www.lighthouselabs.ca", userId: "admin"},
   "9sm5xK": {longurl: "http://www.google.com", userId: "admin"}
