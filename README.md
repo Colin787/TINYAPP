@@ -7,8 +7,7 @@ ps. I by accident stayed on my feature/user-registration branch and made all my 
 I managed to make master the master it should have been originally... Working on the other branch first probably was
 for the best anyways.
 
-
-
+Snapshots of my TinyApp is inside the docs folder
 
 #Dependencies
 -Node.js
