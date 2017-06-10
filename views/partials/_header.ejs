@@ -1,37 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title></title>
-  </head>
-  <style type="text/css">
-    .headingOne{
-      font-style: Verdana;
-      color: red;
-      margin-left: 60px;
 
-    }
-  </style>
-  <body>
-    <header>
-      <p><a href='/'>Go Home</a></p>
-      <h1 class="headingOne"><a href="/urls">SMALLEST APP AROUND</a></h1>
-      <% if (user) { %>
+<h1>TINY APP!</h1>
+<% if (!userId) {%>
+  <h3><a href="/login">LOG IN!!</a></h3>
+  <form action="/register" method="GET" style="margin: 30px 0 30px 0"  >
+    <input type="submit" value="Register New Account" />
+  </form>
 
-        <h4> Welcome to tinyAPP <%= user.email %></h4>
-        <form method="POST" action="/logout" style="margin:auto;">
-        <label for="logout">Logout:</label>
-        <input type="submit" value="Logout">
-        </form>
-      <% } else { %>
-        <form method="GET" action="/register" style="margin:auto; padding: 20px;">
-        <label for="logout">SIGNUP:</label>
-        <input type="submit" value="SignUp">
-        </form>
-        <form method="GET" action="/login" style="margin:auto; padding: 20px;">
-        <label for="login">LOGIN:</label>
-        <input  id="login"type="submit" value="Login">
-        </form>
-      <% }  %>
-    </header>
-  </body>
-</html>
+<% } else { %>
+  <form style="margin-bottom: 30px;" action="/logout" method="POST">
+    <p>user email: <%= email %></p>
+    <input style="margin-left: 20px;" id="email" type="submit" value="Sign Out" />
+  </form>
+<% } %>
