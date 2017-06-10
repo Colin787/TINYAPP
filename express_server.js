@@ -1,9 +1,10 @@
 // Essential requirements
-var express = require("express");
+var express = require("express"); //
 var app = express();
 app.set("view engine", "ejs");
 var PORT = process.env.PORT || 8080;
 var cookieSession = require('cookie-session');
+const funcyjs = require('./funcy');
 var users = {
   // object format below:
 // "guest": {id: "guest", email: "", password: ""}
@@ -11,7 +12,6 @@ var users = {
 
 // For encrypting passwords:
 const bcrypt = require('bcrypt');
-
 
 //Bodyparser
 const bodyParser = require("body-parser");
@@ -24,29 +24,6 @@ app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }));
-
-function randomString() {
-  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  var result = '';
-  for (var i = 6; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
-  return result;
-}
-
-const errorFunc = function(message, retryToRegister, res) {
-  let firstmessage = `<html><body><p>${message}</p>`
-
-  let secmessage = `<div><a href=\"/register\">Retry Registration</a></div>
-                          <div><a href=\"/login\">Login</a></div></body></html>`;
-
-  let thirdmessage = `<div><a href=\"/login\">Retry Logging In</a></div>
-                          <div><a href=\"/register\">Register</a></div></body></html>`;
-
-  if (retryToRegister) {
-    res.status(400).send(`${firstmessage} ${secmessage}`);
-  } else {
-    res.status(400).send(`${firstmessage} ${thirdmessage}`);
-  }
-};
 
 
 var urlDatabase = {
@@ -66,7 +43,7 @@ var templateVars = {
 app.get("/", (req, res) => {
   if (req.session.userId){
     templateVars.userId = req.session.userId;
-    templateVars.email = users[req.session.userId].email;
+    //templateVars.email = users[req.session.userId].email;
   } else {
     templateVars.userId = "";
     templateVars.email = "";
@@ -111,7 +88,7 @@ app.post("/urls/create", (req, res) => {
   if (!(theUrl.slice(0,6) == "http://" || theUrl.slice(0,7) == "https://")) {
     theUrl = `http://${theUrl}`;
   }
-  urlDatabase[randomString()] = {longurl: theUrl, userId: req.session.userId};
+  urlDatabase[funcyjs.randomNumber()] = {longurl: theUrl, userId: req.session.userId};
   res.redirect("/");
 });
 
@@ -134,16 +111,16 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let newUserID = randomString();
+  let newUserID = funcyjs.randomNumber();
 
   if (!req.body.email || !req.body.password) {
-    errorFunc("400! Fill in all the blanks please :)", true, res);
+    funcyjs.errorFunc("400! Fill in all the blanks please :)", true, res);
   }
   else {
     var alreadyRegistered;      // wanted to not use this but couldn't figure out how :(
     for (entry in users) {
       if (req.body.email === users[entry].email) {
-        errorFunc("400! This email address is already registered.", true, res);
+        funcyjs.errorFunc("400! This email address is already registered.", true, res);
         alreadyRegistered = true;
       }
     }
@@ -168,7 +145,7 @@ app.post("/login", (req, res) => {
   } else {
 
     if (!req.body.email || !req.body.password) {
-      errorFunc("400! Email or pass is blank... Please fill in :)", false, res);
+      funcyjs.errorFunc("400! Email or pass is blank... Please fill in :)", false, res);
     } else {
 
       var userId;
@@ -178,12 +155,12 @@ app.post("/login", (req, res) => {
         }
       }
       if (!userId) {
-        errorFunc("400! Email not found.", false, res);
+        funcyjs.errorFunc("400! Email not found.", false, res);
       } else {
 
         var user = users[userId];
         if (!bcrypt.compareSync(req.body.password, user.password)) {
-          errorFunc("Incorrect password, please try again.", false, res);
+          funcyjs.errorFunc("Incorrect password, please try again.", false, res);
         } else {
           req.session.userId = user.userId;
           res.redirect('/');
