@@ -4,10 +4,10 @@ var app = express();
 app.set("view engine", "ejs");
 var PORT = process.env.PORT || 8080;
 var cookieSession = require('cookie-session');
-const funcyjs = require('./funcy');
+const funcyjs = require('./funcy');//file where my functions are stored
 var users = {
   // object format below:
-// "guest": {id: "guest", email: "", password: ""}
+// "user": {id: "user", email: "", password: ""}
 };
 
 // For encrypting passwords:
@@ -39,34 +39,33 @@ var templateVars = {
       shortURL: "",
       longURL: ""
     };
-
+//page with all short urls/ links to websites to
 app.get("/", (req, res) => {
   if (req.session.userId){
     templateVars.userId = req.session.userId;
-    //templateVars.email = users[req.session.userId].email;
+    templateVars.email = users[req.session.userId].email;
+    res.render("urls_index", templateVars);
   } else {
-    templateVars.userId = "";
-    templateVars.email = "";
+    res.render('login');
   }
-  res.render("urls_index", templateVars);
 });
-
+//currently looged in users page with urls they added
 app.get("/urls/user", (req, res) => {
   templateVars.userId = req.session.userId;
   templateVars.email = users[req.session.userId].email;
   res.render("urls_user", templateVars);
 });
-
+//create new url page
 app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
-
+//page for said url you want to examine
 app.get("/urls/:id", (req, res) => {
   templateVars.shortURL = req.params.id;
   templateVars.longURL = urlDatabase[req.params.id].longurl;
   res.render("urls_show", templateVars);
 });
-
+//user can edit urls here/update them
 app.get("/urls/:id/edit", (req, res) => {
   if (urlDatabase[req.params.id].userId === req.session.userId) {
     templateVars.shortURL = req.params.id;
@@ -74,15 +73,15 @@ app.get("/urls/:id/edit", (req, res) => {
     res.render("urls_update", templateVars);
   }
 });
-
+//user registration page
 app.get("/register", (req, res) => {
   res.render("registration");
 });
-
+//login page
 app.get("/login", (req, res) => {
   res.render("login");
 });
-
+//create new short url
 app.post("/urls/create", (req, res) => {
   let theUrl = req.body.longURL;
   if (!(theUrl.slice(0,6) == "http://" || theUrl.slice(0,7) == "https://")) {
@@ -91,14 +90,14 @@ app.post("/urls/create", (req, res) => {
   urlDatabase[funcyjs.randomNumber()] = {longurl: theUrl, userId: req.session.userId};
   res.redirect("/");
 });
-
+//delete url and redirects back to /urls/user....aka updating the page
 app.post("/urls/:id/delete", (req, res) => {
   if (urlDatabase[req.params.id].userId === req.session.userId) {
     delete urlDatabase[req.params.id];
     res.redirect("/urls/user");
   }
 });
-
+//update the short url
 app.post("/urls/:id/update", (req, res) => {
   let updatedUrl = req.body.longURL;
   if (!(updatedUrl.slice(0,7) == "http://" || updatedUrl.slice(0,8) == "https://")) {
@@ -109,7 +108,7 @@ app.post("/urls/:id/update", (req, res) => {
     res.redirect("/");
   }
 });
-
+//new user registration
 app.post("/register", (req, res) => {
   let newUserID = funcyjs.randomNumber();
 
@@ -117,14 +116,14 @@ app.post("/register", (req, res) => {
     funcyjs.errorFunc("400! Fill in all the blanks please :)", true, res);
   }
   else {
-    var alreadyRegistered;      // wanted to not use this but couldn't figure out how :(
-    for (entry in users) {
-      if (req.body.email === users[entry].email) {
+    var registered;
+    for (var id in users) {
+      if (req.body.email === users[id].email) {
         funcyjs.errorFunc("400! This email address is already registered.", true, res);
-        alreadyRegistered = true;
+        registered = true;
       }
     }
-    if (!alreadyRegistered) {   // wanted to not use this but couldn't figure out how :(
+    if (!registered) {
       const password = req.body.password;
       const hashed_password = bcrypt.hashSync(password, 10);
       users[newUserID] = {
@@ -138,7 +137,7 @@ app.post("/register", (req, res) => {
     }
   }
 });
-
+//log said user in
 app.post("/login", (req, res) => {
   if (req.body.register) {
     res.redirect('/register');
@@ -149,9 +148,9 @@ app.post("/login", (req, res) => {
     } else {
 
       var userId;
-      for (entry in users) {
-        if (req.body.email === users[entry].email) {
-          userId = entry;
+      for (var id in users) {
+        if (req.body.email === users[id].email) {
+          userId = id;
         }
       }
       if (!userId) {
@@ -167,15 +166,15 @@ app.post("/login", (req, res) => {
         }
       }
     }
-  }
-});
-
+  } //
+});// this is bracket for app.post
+//user log out
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect('/');
 });
 
-
+//listening function also console logs port number
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
