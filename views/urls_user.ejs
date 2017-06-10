@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body style="font-size:20px; padding:25px 40px 40px 50px;">
+    <header>
+      <% include ../views/partials/_header %>
+    </header>
+    <p>Here are your shortened URLS: </p>
+    <ol>
+      <% for (var i in urls) {%>
+        <% if (urls[i].userId === userId) {%>
+          <li>
+            <p>
+              <a href="<%= urls[i].link %>"> <%= i %></a>
+              <p><%= `-- -- -- -- --`%></p>
+              <a href="/urls/<%= i %>"> View the url </a>
+            </p>
+            <p>
+              <form style="float: left;" method="GET" action="/urls/<%= i %>/edit">
+                <label for="edit">
+                  <button id="edit" type="submit">Edit</button>
+                </label>
+              </form>
+              <form style="padding-left: 45px;" method="POST" action="/urls/<%= i %>/delete">
+                <label for="delete">
+                  <button id="delete" type="submit">Delete<% delete i %></button>
+                </label>
+              </form>
+            </p>
+          </li>
+        <% } %>
+      <% } %>
+    </ol>
+    <form action="/urls/new">
+      <label for="addNew">
+        <input if="addNew" type="submit" value="Add a new URL to your list" />
+      </label>
+    </form>
+    <form action="/" style="padding-top: 14px;">
+      <label for="backToFull">
+        <input id="backToFull" type="submit" value="Back to the full list" />
+      </label>
+    </form>
+  </body>
+</html>
