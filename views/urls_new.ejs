@@ -2,11 +2,19 @@
 <html lang="en">
   <head></head>
   <body style="font-size:20px; padding:50px;">
-    <% include partials/_header %>
-    <form action="/urls" method="POST" style="margin:auto; padding: 100px;">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px" value="https://">
+    <% include ../views/partials/_header %>
+     <form action="/urls/create" method="POST">
+      <label for="shortURL">Enter new URL to link to: </label>
+      <input id="shortURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
       <input type="submit" value="Submit">
+    </form>
+    <form action="/urls/user" style="padding-top:28px;">
+      <label for="backToYour">
+      <input type="submit" id="backToYour" value="Back to your list" /></label>
+    </form>
+    <form action="/" style="padding-top:14px;">
+      <label for="backToFull">
+      <input type="submit" id="backToFull" value="Back to full list" /></label>
     </form>
   </body>
 </html>
