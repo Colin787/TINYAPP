@@ -4,9 +4,14 @@ var app = express();
 app.set("view engine", "ejs");
 var PORT = process.env.PORT || 8080;
 var cookieSession = require('cookie-session');
+var users = {
+  // object format below:
+// "guest": {id: "guest", email: "", password: ""}
+};
 
 // For encrypting passwords:
 const bcrypt = require('bcrypt');
+
 
 //Bodyparser
 const bodyParser = require("body-parser");
@@ -27,13 +32,27 @@ function randomString() {
   return result;
 }
 
+const errorFunc = function(message, retryToRegister, res) {
+  let firstmessage = `<html><body><p>${message}</p>`
+
+  let secmessage = `<div><a href=\"/register\">Retry Registration</a></div>
+                          <div><a href=\"/login\">Login</a></div></body></html>`;
+
+  let thirdmessage = `<div><a href=\"/login\">Retry Logging In</a></div>
+                          <div><a href=\"/register\">Register</a></div></body></html>`;
+
+  if (retryToRegister) {
+    res.status(400).send(`${firstmessage} ${secmessage}`);
+  } else {
+    res.status(400).send(`${firstmessage} ${thirdmessage}`);
+  }
+};
+
+
 var urlDatabase = {
   "b2xVn2": {longurl: "http://www.lighthouselabs.ca", userId: "admin"},
   "9sm5xK": {longurl: "http://www.google.com", userId: "admin"}
 };
-
-
-var users = {};
 
 var templateVars = {
       urls: urlDatabase,
@@ -79,7 +98,6 @@ app.get("/urls/:id/edit", (req, res) => {
   }
 });
 
-
 app.get("/register", (req, res) => {
   res.render("registration");
 });
@@ -116,28 +134,26 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let newUserID = generateRandomString();
+  let newUserID = randomString();
 
   if (!req.body.email || !req.body.password) {
-
-     res.send("error!");
+    errorFunc("400! Fill in all the blanks please :)", true, res);
   }
   else {
-    var alreadyRegistered;
-    for (var entry in users) {
+    var alreadyRegistered;      // wanted to not use this but couldn't figure out how :(
+    for (entry in users) {
       if (req.body.email === users[entry].email) {
-         res.send("error!");
+        errorFunc("400! This email address is already registered.", true, res);
         alreadyRegistered = true;
       }
     }
-    if (!alreadyRegistered) {
+    if (!alreadyRegistered) {   // wanted to not use this but couldn't figure out how :(
       const password = req.body.password;
-      //
+      const hashed_password = bcrypt.hashSync(password, 10);
       users[newUserID] = {
         userId: newUserID,
         email: req.body.email,
-        password: password
-        //
+        password: hashed_password
       };
 
       req.session.userId = newUserID;
@@ -152,24 +168,26 @@ app.post("/login", (req, res) => {
   } else {
 
     if (!req.body.email || !req.body.password) {
-       res.send("error!");
+      errorFunc("400! Email or pass is blank... Please fill in :)", false, res);
     } else {
 
       var userId;
-      for (var entry in users) {
+      for (entry in users) {
         if (req.body.email === users[entry].email) {
           userId = entry;
         }
       }
       if (!userId) {
-         res.send("error!");
+        errorFunc("400! Email not found.", false, res);
       } else {
 
         var user = users[userId];
-
-        req.session.userId = user.userId;
-        res.redirect('/');
-      //
+        if (!bcrypt.compareSync(req.body.password, user.password)) {
+          errorFunc("Incorrect password, please try again.", false, res);
+        } else {
+          req.session.userId = user.userId;
+          res.redirect('/');
+        }
       }
     }
   }
@@ -179,6 +197,7 @@ app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect('/');
 });
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
